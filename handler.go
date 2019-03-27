@@ -49,7 +49,7 @@ func (wh *websocketHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err := decoder.Decode(&rm); err != nil {
 			return
 		}
-
+		fmt.Println(rm)
 		// calculate userID by token
 		userID := rm.Token
 		if wh.calcUserIDFunc != nil {
