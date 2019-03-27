@@ -22,7 +22,7 @@ type websocketHandler struct {
 
 	// calcUserIDFunc defines to calculate userID by token. The userID will
 	// be equal to token if this function is nil.
-	calcUserIDFunc func(token string) (userID string, ok bool)
+	calcUserIDFunc func(token string, body RegisterMessage) (userID string, ok bool)
 }
 
 // RegisterMessage defines message struct client send after connect
@@ -49,11 +49,10 @@ func (wh *websocketHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err := decoder.Decode(&rm); err != nil {
 			return
 		}
-		fmt.Println(rm)
 		// calculate userID by token
 		userID := rm.Token
 		if wh.calcUserIDFunc != nil {
-			uID, ok := wh.calcUserIDFunc(rm.Token)
+			uID, ok := wh.calcUserIDFunc(rm.Token, rm)
 			if !ok {
 				return
 			}
